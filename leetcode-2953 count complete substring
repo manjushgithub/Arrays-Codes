@@ -1,0 +1,66 @@
+# Arrays-Codes
+leetcode-2953 count complete substring 
+
+class Solution {
+    public int countCompleteSubstrings(String word, int k) {
+  //break the string to satisfy the 2nd condition
+        int n=word.length();
+        int result=0;
+        int last=0;
+        for(int i=1;i<=n;i++)
+        {
+            if(i==n || Math.abs(word.charAt(i)-word.charAt(i-1))>2)
+            {
+                result+=solve(last,i-1,word,k);
+                last=i;
+            }
+        }
+        return result;
+    }
+
+    int solve(int start,int end,String word,int k){
+
+        int result=0;
+        //1 unique char,2 unique char,
+        for(int chars=1;chars<=26 && chars*k<=end-start+1;chars++)
+        {
+            int[] count=new int[26];
+            int goodchar=0;
+            int i=start;
+          int windowlength=chars*k;
+            for(int j=start;j<=end;j++)
+            {
+                 char ch=word.charAt(j);
+                 count[ch-'a']++;
+                 if(count[ch-'a']==k)
+                 {
+                     goodchar++;
+                 }
+                 else if(count[ch-'a']==k+1)
+                 {
+                     goodchar--;
+                 }
+
+                 if(j-i+1>windowlength)//need to shift window
+                 {
+                     if(count[word.charAt(i)-'a']==k)
+                     {
+                         goodchar--;
+                     }
+                     else if(count[word.charAt(i)-'a']==k+1)
+                     {
+                         goodchar++;
+                     }    
+                     count[word.charAt(i)-'a']--;
+                     i++;          
+                }
+            
+                   if(goodchar==chars)
+                   {
+                result++;
+                    }
+            }
+        }
+        return result;
+    }
+}
